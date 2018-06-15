@@ -34,8 +34,8 @@ function siteIsConfigured() {
 }
 
 function _query($q) {
-    $res = mysql_query($q);
-    if (mysql_error())
+    $res = mysqli_query($link, $q);
+    if (mysql_error($link))
     {
       $errormessage  = "An error occured while executing a query on the database, please report this error and the query to your administrator or the aigaion development team.<br/>\n";
       $errormessage .= "MySQL Error: ".mysql_error()."<br/>\n";

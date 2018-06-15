@@ -7,12 +7,12 @@ function installNewDatabase($AIGAION2_DB_HOST, $AIGAION2_DB_USER, $AIGAION2_DB_P
         #
         
         //Connect to the database, feedback html when an error occurs.
-        $theDatabase = mysql_connect($AIGAION2_DB_HOST,
+        $theDatabase = mysqli_connect($AIGAION2_DB_HOST,
                                      $AIGAION2_DB_USER,
                                      $AIGAION2_DB_PWD);
         if ($theDatabase)
         {
-            if (!mysql_select_db($AIGAION2_DB_NAME)) {
+            if (!mysqli_select_db($theDatabase, $AIGAION2_DB_NAME)) {
                 die("Aigaion 2.0 migration script: database connection to new database failed<br>
                 Error: Aigaion did not succeed in selecting the correct 
                 database. Please check the database settings in your migration script.");
@@ -21,7 +21,9 @@ function installNewDatabase($AIGAION2_DB_HOST, $AIGAION2_DB_USER, $AIGAION2_DB_P
             die("Aigaion: database connection to new database failed<br>
             Error: Aigaion did not succeed in connecting to the database 
             server. Please check the database settings in config.php.");
-        }        
+        }
+
+	$link = $theDatabase;
               
         _query("CREATE TABLE `".$AIGAION2_DB_PREFIX."aigaiongeneral` (  `version` varchar(10) NOT NULL default '',  `releaseversion` varchar(10) NOT NULL,  PRIMARY KEY  (`version`)) ENGINE=MyISAM CHARACTER SET utf8;");
         _query("INSERT INTO  `".$AIGAION2_DB_PREFIX."aigaiongeneral` (`version`,`releaseversion`) 
@@ -158,12 +160,12 @@ function migrateOldDatabase($AIGAION1_DB_HOST, $AIGAION1_DB_USER, $AIGAION1_DB_P
 	#
 
 	//Connect to the database, feedback html when an error occurs.
-	$theDatabase = mysql_connect(
+	$theDatabase = mysqli_connect(
 			$AIGAION1_DB_HOST,
 			$AIGAION1_DB_USER,
 			$AIGAION1_DB_PWD);
 	if ($theDatabase) {
-		if (!mysql_select_db($AIGAION1_DB_NAME)) {
+		if (!mysqli_select_db($theDatabase, $AIGAION1_DB_NAME)) {
 				die("<div class='errormessage'>Aigaion 2.0 migration script: database connection to version 1 database failed<br>
 				Error: Aigaion did not succeed in selecting the correct
 				database. Please check the database settings in your migration script.</div>");
@@ -174,6 +176,8 @@ function migrateOldDatabase($AIGAION1_DB_HOST, $AIGAION1_DB_USER, $AIGAION1_DB_P
 		server. Please check the database settings in config.php.</div>");
 	}
 
+	$link = $theDatabase;
+	
 	//construct migration queries
 	$migrate_queries = array();
 
